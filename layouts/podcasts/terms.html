@@ -1,0 +1,24 @@
+{{- define "main" -}}
+<div class="col">
+	{{ with .Content }}
+	<div class="row">
+			<div class="col portfolio-content">
+				{{ . }}
+			</div>
+	</div>
+	{{ end }}
+	<div class="row">
+    {{ range .Pages }}
+    <div class="col portfolio-item">
+			<div class="portfolio-container"{{ with .Params.containerstyle }} style="{{ . | safeCSS }}"{{ end }}>
+				<h3{{ with .Params.h1size }} class="{{ . }}"{{ end }}><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+				{{ with .Params.subtitle }}<p>{{ . }}</p>{{ end }}
+			</div>
+			<div class="portfolio-button">
+				<a href="{{ .RelPermalink }}">{{ i18n "more" }}</a>
+			</div>
+    </div>
+    {{ end }}
+  </div>
+</div>
+{{- end -}}

@@ -1,0 +1,15 @@
+{{- define "main" -}}
+{{if in .Params.hosterUrl "podigee.io" }}
+<div class="col">
+  <script class="podigee-podcast-player" src="https://player.podigee-cdn.net/podcast-player/javascripts/podigee-podcast-player.js" data-configuration="{{ .Params.hosterUrl }}/embed?context=external"></script>
+</div>
+{{ else }}
+<ul>
+{{ range sort (where .Pages "Params.airDate" "<" (now.Format "2006-01-02T15:04:05-0700")) ".Params.airDate" "desc" }}
+    <li>
+        <a target="{{ if .Params.publishURL }}_blank{{ end }}" href="{{ if .Params.publishURL }}{{ .Params.publishURL }}{{ else }}{{.RelPermalink}}{{ end }}">{{.Title}}</a> ({{.Params.airDate | time.Format ":date_full"}}){{ if .Params.subtitle }} - <i>{{ .Params.subtitle }}</i>{{ end }}
+    </li>
+{{ end }}
+</ul>
+{{ end }}
+{{- end -}}

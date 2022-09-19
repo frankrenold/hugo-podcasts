@@ -1,0 +1,13 @@
+{{- define "main" -}}
+<div class="col content">
+	{{ partial "featured-image" . }}
+	{{ with .Resources.GetMatch "*_episode_*.mp3" -}}
+	<audio controls autoplay style="width: 100%;">
+		<source src="{{ .Permalink }}" type="audio/mpeg">
+		Your browser does not support the audio element.
+	</audio>
+	{{ end }}
+	{{- .Content -}}
+</div>
+{{ partial "sidebar" . }}
+{{- end -}}

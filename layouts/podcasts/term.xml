@@ -55,52 +55,52 @@
         {{- .Params.feed.owner.email -}}
       </itunes:email>
     </itunes:owner>
-    {{ $now := now.Format "2006-01-02T00:00:00-07:00" -}}
-    {{ range where (where .Pages "Params.airDate" "<>" nil) "Params.airDate" "<=" $now -}}
-    <item>
-      <title>{{ .Title }}</title>
-      <itunes:title>{{ .Title }}</itunes:title>
-      <description>
-        {{- .Params.description -}}
-      </description>
-      <pubDate>Sat, 30 Jul 2022 08:41:48 +0000
-          {{ .Params.airDate | time.Format "Mon, 2 Jan 2006 15:04:05 -0700" }}
-      </pubDate>
-      <link>https://mic-on-earth.podigee.io/t1-trailer</link>
-      <guid isPermaLink="false">4af250caab44c8d4be3064f428bcdd08</guid>
-      <content:encoded>
-        <![CDATA[Erste Folgen im September 2022
-<h1 id="dieserpodcastistteildesmiconearthprojecthttpsmiconearthnet">Dieser Podcast ist Teil des <strong><a href="https://mic-on-earth.net/">mic-on-earth project</a></strong>.</h1>
-<p><em>This Podcast is part of the <strong><a href="https://mic-on-earth.net/en/">mic-on-earth project</a></strong>. Find the english version of the shownotes below.</em></p>
-<p>Wir schicken Mikros auf Weltreise. Sie reisen von Mensch zu Mensch, von Leben zu Leben. Manchmal nur über die Strasse und manchmal auf einen anderen Kontinent.</p>
-<p>Jede Person, die ein Mikrofon erhält, darf Teil des Experiments werden und eine Erinnerung aus ihrem Leben erzählen. Diese Geschichten sammeln und veröffentlichen wir.</p>
-<h3 id="sprachversionenhttpsmiconearthnetpodcastsdiesespodcasts"><a href="https://mic-on-earth.net/podcasts">Sprachversionen</a> dieses Podcasts</h3>
-<p>Du verstehst kein Englisch? Oder möchtest ausschliesslich spanische Geschichten hören? In diesem Podcast sammeln wir Geschichten unabhängig von der Erzählsprache. Sobald wir regelmässig Geschichten in einer neuen Sprache aufzeichnen, starten wir einen separaten Podcast, der dann einzig Geschichten in dieser Sprache enthält. Eine <a href="https://mic-on-earth.net/podcasts">Übersicht zu allen Podcasts</a> findest du hier.</p>
-<h3 id="alshosteinteildesprojekteswerden">Als Host ein Teil des Projektes werden?</h3>
-<p>Damit wir Geschichten möglichst vieler Menschen sammeln können, brauchen wir die Hilfe weiterer Hosts, die fliessend weitere Sprachen als Deutsch und/oder Englisch sprechen. Wenn du Lust hast dabei zu sein, melde dich per <a href="hello@mic-on-earth.net">E-Mail</a> bei uns.</p>
-<p>Die Idee und die erste Umsetzung des mic-on-earth project (2022) stammen von <a href="https://frankrenold.ch">Frank Renold</a></p>
-<h2 id="en">[EN]</h2>
-<p>We send microphones on a world tour. They travel from person to person, from life to life. Sometimes just across the street and sometimes to another continent.</p>
-<p>Each person who receives a mic gets to be part of the experiment and tell a memory from their life. We collect these stories here on the web and publish them as a podcast.</p>
-<h3 id="languageversionshttpsmiconearthnetpodcastsofthispodcast"><a href="https://mic-on-earth.net/podcasts">Language versions</a> of this podcast</h3>
-<p>Don't understand German? Or want to hear exclusively Spanish stories? In this podcast we collect stories regardless of the storytelling language. As soon as we regularly record stories in a new language, we will start a separate podcast that will then only contain stories in that language. An <a href="https://mic-on-earth.net/podcasts">overview of all podcasts</a> can be found here.</p>
-<h3 id="becomeapartoftheprojectasahost">Become a part of the project as a host?</h3>
-<p>In order to collect stories from as many people as possible, we need the help of other hosts who are fluent in languages other than German and/or English. If you want to be a part of it, contact us via <a href="hello@mic-on-earth.net">email</a>.</p>
-<p>Idea and the first implementation of the mic-on-earth project (2022) by <a href="https://frankrenold.ch">Frank Renold</a></p>]]>
-      </content:encoded>
-      <itunes:episodeType>trailer</itunes:episodeType>
-      <itunes:subtitle>Erste Folgen im September 2022</itunes:subtitle>
-      <itunes:summary>Willkommen beim mic-on-earth Podcast.
+    {{ range sort (where .Pages "Params.airDate" "<>" nil) "Params.airDate" "desc" -}}
+      {{- $airDate := time .Params.airDate }}
+      {{- if (le $airDate now) }}
+      {{- $audioFile := .Resources.GetMatch "*.mp3" }}
+      <item>
+        <title>{{ .Title }}</title>
+        <itunes:title>{{ .Title }}</itunes:title>
+        <description>
+          {{- .Params.description -}}
+        </description>
+        <pubDate>
+          {{- $date := time .Params.airDate -}}
+          {{- $date.Format "Mon, 2 Jan 2006 15:04:05 -0700" | safeHTML -}}
+        </pubDate>
+        <link>{{ .Permalink }}</link>
+        <guid isPermaLink="false">
 
-Mein Name ist Frank und ich schicke Mikros auf Weltreise und lasse mir wahre Geschichten erzählen. Aus dem Leben von Menschen wie du und ich. Die Teilnehmerinnen und Teilnehmer erhalten das Mikro ohne Vorwarnung und entscheiden auch selbst, wer als nächstes ein Teil dieses Podcasts wird. Ein überraschender Einblick in abenteuerliche Leben ganz normaler Menschen.
-
-Wenn du den Podcast abonnierst, bist du von der ersten Folge an mit dabei.</itunes:summary>
-      <itunes:explicit>no</itunes:explicit>
-      <itunes:keywords></itunes:keywords>
-      <itunes:author>mic-on-earth project</itunes:author>
-      <enclosure url="https://main.podigee-cdn.net/media/podcast_56793_mic_on_earth_episode_830605_trailer.mp3?v=1659170521&amp;source=feed" type="audio/mpeg" length="1839574"/>
-      <itunes:duration>114</itunes:duration>
-    </item>
+          {{- sha256 (path.Base $audioFile.Permalink) -}}
+        </guid>
+        <content:encoded>
+          {{- printf "<![CDATA[%s]]>" .Content | safeHTML -}}
+        </content:encoded>
+        <itunes:episodeType>
+          {{- if (isset .Params "episodetype") }}{{ .Params.episodetype }}{{ else }}full{{ end -}}
+        </itunes:episodeType>
+        <itunes:subtitle>
+          {{- with .Params.subtitle }}{{ . }}{{ end -}}
+        </itunes:subtitle>
+        <itunes:summary>
+          {{- with .Params.description }}{{ . }}{{ end -}}
+        </itunes:summary>
+        <itunes:explicit>
+          {{- if (isset .Params "explicit") }}{{ .Params.explicit }}{{ else }}no{{ end -}}
+        </itunes:explicit>
+        <itunes:keywords>
+          {{- with .Params.keywords }}
+          {{- delimit . "," -}}
+          {{ end -}}
+        </itunes:keywords>
+        <itunes:author>
+          {{- with .Params.host }}{{ . }}{{ end -}}
+        </itunes:author>
+        <enclosure url="{{ $audioFile.Permalink }}" type="audio/mpeg" length="{{ len $audioFile.Content }}"/>
+        <itunes:duration>{{- .Params.feed.duration -}}</itunes:duration>
+      </item>
+      {{ end -}}
     {{ end -}}
   </channel>
 </rss>

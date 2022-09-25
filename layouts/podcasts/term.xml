@@ -43,7 +43,17 @@
       {{- delimit . "," -}}
       {{ end -}}
     </itunes:keywords>
-    <itunes:category text="{{ .Params.feed.category }}"/>
+    {{- range .Params.feed.categories }}
+    {{- if .subcategories }}
+    <itunes:category text="{{ .name }}">
+    {{- range .subcategories }}
+      <itunes:category text="{{ . }}" />
+    {{- end }}
+    <itunes:category />
+    {{- else }}
+    <itunes:category text="{{ .name }}" />
+    {{- end }}
+    {{- end }}
     <itunes:summary>
       {{- .Params.feed.description -}}
     </itunes:summary>
@@ -69,9 +79,8 @@
           {{- $date := time .Params.airDate -}}
           {{- $date.Format "Mon, 2 Jan 2006 15:04:05 -0700" | safeHTML -}}
         </pubDate>
-        <link>{{ .Permalink }}</link>
+        <link>{{ if .Permalink }}{{ .Permalink }}{{ else }}{{ .Params.publishURL}}{{ end }}</link>
         <guid isPermaLink="false">
-
           {{- sha256 (path.Base $audioFile.Permalink) -}}
         </guid>
         <content:encoded>
@@ -98,7 +107,7 @@
           {{- with .Params.host }}{{ . }}{{ end -}}
         </itunes:author>
         <enclosure url="{{ $audioFile.Permalink }}" type="audio/mpeg" length="{{ len $audioFile.Content }}"/>
-        <itunes:duration>{{- .Params.feed.duration -}}</itunes:duration>
+        <itunes:duration>{{- .Params.duration -}}</itunes:duration>
       </item>
       {{ end -}}
     {{ end -}}

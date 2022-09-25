@@ -49,7 +49,7 @@
     {{- range .subcategories }}
       <itunes:category text="{{ . }}" />
     {{- end }}
-    <itunes:category />
+    </itunes:category>
     {{- else }}
     <itunes:category text="{{ .name }}" />
     {{- end }}

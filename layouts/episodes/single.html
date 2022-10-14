@@ -1,6 +1,5 @@
 {{- define "main" -}}
 <div class="col content">
-	{{ .Resources }}
 	{{ partial "featured-image" . }}
 	{{ with .Resources.GetMatch "*.mp3" -}}
 	<audio controls autoplay style="width: 100%;">

@@ -1,0 +1,18 @@
+<div class="col sidebar coldivider">
+<script class="podigee-podcast-player" src="https://player.podigee-cdn.net/podcast-player/javascripts/podigee-podcast-player.js" data-configuration="https://mic-on-earth.podigee.io/embed?context=external"></script>
+{{ partial "subscribe-form.html" . }}
+</div>
+
+<h4>Podcast abonnieren</h4>
+<ul>
+  {{ with .Date }}<li>aufgezeichnet am {{ . | time.Format ":date_full" }}</li>{{ end }}
+  {{ if .Params.location }}
+    {{ $c := "" }}
+    {{ if .Params.coordinates }}
+      {{ $c = split .Params.coordinates ","}}
+      {{ if ne (len $c) 2}}{{ $c = nil }}{{ end }}
+    {{ end }}
+    <li>in {{ if $c }}<a target="_blank" href="https://www.openstreetmap.org/#map=15/{{ delimit $c "/" }}">{{ end }}{{ .Params.location }}{{ if $c }}</a>{{ end }}</li>
+  {{ end }}
+  {{ with .Params.airDate }}<li>publiziert am {{ . | time.Format ":date_full" }}</li>{{ end }}
+</ul>

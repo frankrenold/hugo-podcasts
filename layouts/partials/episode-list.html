@@ -1,0 +1,11 @@
+<ul>
+{{ $titledivider := " - " -}}
+{{ if .Params.subscriptions -}}
+  {{ $titledivider = "<br/>" -}}
+{{ end -}}
+{{ range sort (where .Pages "Params.airDate" "<" (now.Format "2006-01-02T15:04:05-0700")) ".Params.airDate" "desc" -}}
+    <li>
+        <a target="{{ if .Params.publishURL }}_blank{{ end }}" href="{{ if .Params.publishURL }}{{ .Params.publishURL }}{{ else }}{{.RelPermalink}}{{ end }}">{{.Title}}</a> ({{.Params.airDate | time.Format ":date_full"}}){{ if .Params.subtitle }}{{ $titledivider | safeHTML }}<i>{{ .Params.subtitle }}</i>{{ end }}
+    </li>
+{{ end -}}
+</ul>

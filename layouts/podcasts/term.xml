@@ -39,21 +39,21 @@
       {{- .Params.feed.explicit -}}
     </itunes:explicit>
     <itunes:keywords>
-      {{- with .Params.keywords }}
-      {{- delimit . "," -}}
+      {{ with .Params.keywords -}}
+      {{ delimit . "," -}}
       {{ end -}}
     </itunes:keywords>
-    {{- range .Params.feed.categories }}
-    {{- if .subcategories }}
+    {{ range .Params.feed.categories -}}
+    {{ if .subcategories -}}
     <itunes:category text="{{ .name }}">
-    {{- range .subcategories }}
+    {{ range .subcategories -}}
       <itunes:category text="{{ . }}" />
-    {{- end }}
+    {{ end -}}
     </itunes:category>
-    {{- else }}
+    {{ else -}}
     <itunes:category text="{{ .name }}" />
-    {{- end }}
-    {{- end }}
+    {{ end -}}
+    {{ end -}}
     <itunes:summary>
       {{- .Params.feed.description -}}
     </itunes:summary>
@@ -66,50 +66,50 @@
       </itunes:email>
     </itunes:owner>
     {{ range sort (where .Pages "Params.airDate" "<>" nil) "Params.airDate" "desc" -}}
-      {{- $airDate := time .Params.airDate }}
-      {{- if (le $airDate now) }}
-      {{- $audioFile := .Resources.GetMatch "*.mp3" }}
-      <item>
-        <title>{{ .Title }}</title>
-        <itunes:title>{{ .Title }}</itunes:title>
-        <description>
-          {{- .Params.description -}}
-        </description>
-        <pubDate>
-          {{- $date := time .Params.airDate -}}
-          {{- $date.Format "Mon, 2 Jan 2006 15:04:05 -0700" | safeHTML -}}
-        </pubDate>
-        <link>{{ if .Permalink }}{{ .Permalink }}{{ else }}{{ .Params.publishURL}}{{ end }}</link>
-        <guid isPermaLink="false">
-          {{- sha256 (path.Base $audioFile.Permalink) -}}
-        </guid>
-        <content:encoded>
-          {{- printf "<![CDATA[%s]]>" .Content | safeHTML -}}
-        </content:encoded>
-        <itunes:episodeType>
-          {{- if (isset .Params "episodetype") }}{{ .Params.episodetype }}{{ else }}full{{ end -}}
-        </itunes:episodeType>
-        <itunes:subtitle>
-          {{- with .Params.subtitle }}{{ . }}{{ end -}}
-        </itunes:subtitle>
-        <itunes:summary>
-          {{- with .Params.description }}{{ . }}{{ end -}}
-        </itunes:summary>
-        <itunes:explicit>
-          {{- if (isset .Params "explicit") }}{{ .Params.explicit }}{{ else }}no{{ end -}}
-        </itunes:explicit>
-        <itunes:keywords>
-          {{- with .Params.keywords }}
-          {{- delimit . "," -}}
-          {{ end -}}
-        </itunes:keywords>
-        <itunes:author>
-          {{- with .Params.host }}{{ . }}{{ end -}}
-        </itunes:author>
-        <enclosure url="{{ $audioFile.Permalink }}" type="audio/mpeg" length="{{ len $audioFile.Content }}"/>
-        <itunes:duration>{{- .Params.duration -}}</itunes:duration>
-      </item>
-      {{ end -}}
+    {{ $airDate := time .Params.airDate -}}
+    {{ if (le $airDate now) -}}
+    {{ $audioFile := .Resources.GetMatch "*.mp3" -}}
+    <item>
+      <title>{{ .Title }}</title>
+      <itunes:title>{{ .Title }}</itunes:title>
+      <description>
+        {{- .Params.description -}}
+      </description>
+      <pubDate>
+        {{ $date := time .Params.airDate -}}
+        {{ $date.Format "Mon, 2 Jan 2006 15:04:05 -0700" | safeHTML -}}
+      </pubDate>
+      <link>{{ if .Permalink }}{{ .Permalink }}{{ else }}{{ .Params.publishURL}}{{ end }}</link>
+      <guid isPermaLink="false">
+        {{- sha256 (path.Base $audioFile.Permalink) -}}
+      </guid>
+      <content:encoded>
+        {{- printf "<![CDATA[%s]]>" .Content | safeHTML -}}
+      </content:encoded>
+      <itunes:episodeType>
+        {{- if (isset .Params "episodetype") }}{{ .Params.episodetype }}{{ else }}full{{ end -}}
+      </itunes:episodeType>
+      <itunes:subtitle>
+        {{- with .Params.subtitle }}{{ . }}{{ end -}}
+      </itunes:subtitle>
+      <itunes:summary>
+        {{- with .Params.description }}{{ . }}{{ end -}}
+      </itunes:summary>
+      <itunes:explicit>
+        {{- if (isset .Params "explicit") }}{{ .Params.explicit }}{{ else }}no{{ end -}}
+      </itunes:explicit>
+      <itunes:keywords>
+        {{- with .Params.keywords -}}
+        {{ delimit . "," -}}
+        {{ end -}}
+      </itunes:keywords>
+      <itunes:author>
+        {{- with .Params.host }}{{ . }}{{ end -}}
+      </itunes:author>
+      <enclosure url="{{ $audioFile.Permalink }}" type="audio/mpeg" length="{{ len $audioFile.Content }}"/>
+      <itunes:duration>{{- .Params.duration -}}</itunes:duration>
+    </item>
+    {{ end -}}
     {{ end -}}
   </channel>
 </rss>

@@ -3,13 +3,43 @@
 <div class="col">
   <script class="podigee-podcast-player" src="https://player.podigee-cdn.net/podcast-player/javascripts/podigee-podcast-player.js" data-configuration="{{ .Params.hosterUrl }}/embed?context=external"></script>
 </div>
+{{ else if .Params.subscriptions }}
+<div class="col content">
+  <a class="button hide-with-sidebar" href="#subscribe">Podcast abonnieren</a>
+  <h4>Aktuelle Folgen anhören</h4>
+  {{ partial "episode-list" . }}
+</div>
+<div class="col sidebar coldivider">
+  <h4 id="subscribe">Podcast abonnieren</h4>
+  <div class="row">
+    <div class="col" style="width: 50%;">
+      {{ range .Params.subscriptions -}}
+        {{ with index . "spotify" -}}
+          <a class="no-hover" href="{{ . }}" target="_blank"><img class="podcasts-subscribe-badge" src="/podcast-badges/spotify-podcast-badge-blk-wht-660x160.svg" style="width: 100%" /></a>
+        {{ end -}}
+        {{ with index . "apple" -}}
+          <a class="no-hover" href="{{ . }}" target="_blank"><img class="podcasts-subscribe-badge" src="/podcast-badges/US_UK_Apple_Podcasts_Listen_Badge_RGB.svg" style="width: 100%" /></a>
+        {{ end -}}
+        {{ with index . "pocketcasts" -}}
+          <a class="no-hover" href="{{ . }}" target="_blank"><img class="podcasts-subscribe-badge" src="/podcast-badges/Badges_pocketcasts_medium_dark.svg" style="width: 100%" /></a>
+        {{ end -}}
+        {{ with index . "google" -}}
+          <a class="no-hover" href="{{ . }}" target="_blank"><img class="podcasts-subscribe-badge" src="/podcast-badges/EN_Google_Podcasts_Badge.svg" style="width: 100%" /></a>
+        {{ end -}}
+      {{ end -}}
+    </div>
+    {{ with .Resources.GetMatch "_cover*" -}}
+    <div class="col" style="width: 50%;">
+      <figure>
+        <img src="{{ .RelPermalink }}" />
+      </figure>
+    </div>
+    {{ end -}}
+  </div>
+</div>
 {{ else }}
-<ul>
-{{ range sort (where .Pages "Params.airDate" "<" (now.Format "2006-01-02T15:04:05-0700")) ".Params.airDate" "desc" }}
-    <li>
-        <a target="{{ if .Params.publishURL }}_blank{{ end }}" href="{{ if .Params.publishURL }}{{ .Params.publishURL }}{{ else }}{{.RelPermalink}}{{ end }}">{{.Title}}</a> ({{.Params.airDate | time.Format ":date_full"}}){{ if .Params.subtitle }} - <i>{{ .Params.subtitle }}</i>{{ end }}
-    </li>
-{{ end }}
-</ul>
+<div class="col">
+  {{ partial "episode-list" . }}
+</div>
 {{ end }}
 {{- end -}}

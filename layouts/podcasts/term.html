@@ -1,16 +1,12 @@
 {{- define "main" -}}
-{{if in .Params.hosterUrl "podigee.io" }}
-<div class="col">
-  <script class="podigee-podcast-player" src="https://player.podigee-cdn.net/podcast-player/javascripts/podigee-podcast-player.js" data-configuration="{{ .Params.hosterUrl }}/embed?context=external"></script>
-</div>
-{{ else if .Params.subscriptions }}
+{{ if .Params.subscriptions -}}
 <div class="col content">
-  <a class="button hide-with-sidebar" href="#subscribe">Podcast abonnieren</a>
-  <h4>Aktuelle Folgen anhören</h4>
+  <a class="button hide-with-sidebar" href="#subscribe">{{ i18n "podcasts_subscribe" }}</a>
+  <h4>{{ i18n "podcasts_listen_episodes" }}</h4>
   {{ partial "episode-list" . }}
 </div>
 <div class="col sidebar coldivider">
-  <h4 id="subscribe">Podcast abonnieren</h4>
+  <h4 id="subscribe">{{ i18n "podcasts_subscribe" }}</h4>
   <div class="row">
     <div class="col" style="width: 50%;">
       {{ range .Params.subscriptions -}}
@@ -37,9 +33,10 @@
     {{ end -}}
   </div>
 </div>
-{{ else }}
+{{ else -}}
 <div class="col">
+  <h4>{{ i18n "podcasts_listen_episodes" }}</h4>
   {{ partial "episode-list" . }}
 </div>
-{{ end }}
-{{- end -}}
+{{ end -}}
+{{ end -}}

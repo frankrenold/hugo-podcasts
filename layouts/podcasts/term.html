@@ -19,9 +19,6 @@
         {{ with index . "pocketcasts" -}}
           <a class="no-hover" href="{{ . }}" target="_blank"><img class="podcasts-subscribe-badge" src="/podcast-badges/Badges_pocketcasts_medium_dark.svg" style="width: 100%" /></a>
         {{ end -}}
-        {{ with index . "google" -}}
-          <a class="no-hover" href="{{ . }}" target="_blank"><img class="podcasts-subscribe-badge" src="/podcast-badges/EN_Google_Podcasts_Badge.svg" style="width: 100%" /></a>
-        {{ end -}}
       {{ end -}}
     </div>
     {{ with .Resources.GetMatch "_cover*" -}}

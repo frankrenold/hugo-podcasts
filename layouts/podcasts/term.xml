@@ -69,6 +69,7 @@
     {{ $airDate := time .Params.airDate -}}
     {{ if (le $airDate now) -}}
     {{ $audioFile := .Resources.GetMatch "*.mp3" -}}
+    {{ if $audioFile -}}
     <item>
       <title>{{ .Title }}</title>
       <itunes:title>{{ .Title }}</itunes:title>
@@ -80,9 +81,7 @@
         {{ $date.Format "Mon, 2 Jan 2006 15:04:05 -0700" | safeHTML -}}
       </pubDate>
       <link>{{ if .Permalink }}{{ .Permalink }}{{ else }}{{ .Params.publishURL}}{{ end }}</link>
-      <guid isPermaLink="false">
-        {{- sha256 (path.Base $audioFile.Permalink) -}}
-      </guid>
+      <guid isPermaLink="false">{{- sha256 $audioFile.Permalink -}}</guid>
       <content:encoded>
         {{- printf "<![CDATA[%s]]>" .Content | safeHTML -}}
       </content:encoded>
@@ -106,9 +105,12 @@
       <itunes:author>
         {{- with .Params.host }}{{ . }}{{ end -}}
       </itunes:author>
-      <enclosure url="{{ $audioFile.Permalink }}" type="audio/mpeg" length="{{ len $audioFile.Content }}"/>
+      <enclosure url="{{ $audioFile.Permalink }}" type="audio/mpeg" length="{{ with len $audioFile.Content }}{{ . }}{{ else }}{{ with .Params.filesize }}{{ . }}{{ end }}{{ end }}"/>
       <itunes:duration>{{- .Params.duration -}}</itunes:duration>
     </item>
+    {{ else -}}
+    {{ warnf "Podcast item without audio file: %s" .RelPermalink -}}
+    {{ end -}}
     {{ end -}}
     {{ end -}}
   </channel>

@@ -11,20 +11,20 @@
     <div class="col" style="width: 50%;">
       {{ range .Params.subscriptions -}}
         {{ with index . "spotify" -}}
-          <a class="no-hover" href="{{ . }}" target="_blank"><img class="podcasts-subscribe-badge" src="/podcast-badges/spotify-podcast-badge-blk-wht-660x160.svg" style="width: 100%" /></a>
+		  <a class="no-hover" href="{{ . }}" target="_blank" rel="noopener noreferrer"><img class="podcasts-subscribe-badge" src="/podcast-badges/spotify-podcast-badge-blk-wht-660x160.svg" style="width: 100%" loading="lazy" alt="Spotify" /></a>
         {{ end -}}
         {{ with index . "apple" -}}
-          <a class="no-hover" href="{{ . }}" target="_blank"><img class="podcasts-subscribe-badge" src="/podcast-badges/US_UK_Apple_Podcasts_Listen_Badge_RGB.svg" style="width: 100%" /></a>
+		  <a class="no-hover" href="{{ . }}" target="_blank" rel="noopener noreferrer"><img class="podcasts-subscribe-badge" src="/podcast-badges/US_UK_Apple_Podcasts_Listen_Badge_RGB.svg" style="width: 100%" loading="lazy" alt="Apple Podcasts" /></a>
         {{ end -}}
         {{ with index . "pocketcasts" -}}
-          <a class="no-hover" href="{{ . }}" target="_blank"><img class="podcasts-subscribe-badge" src="/podcast-badges/Badges_pocketcasts_medium_dark.svg" style="width: 100%" /></a>
+		  <a class="no-hover" href="{{ . }}" target="_blank" rel="noopener noreferrer"><img class="podcasts-subscribe-badge" src="/podcast-badges/Badges_pocketcasts_medium_dark.svg" style="width: 100%" loading="lazy" alt="Pocket Casts" /></a>
         {{ end -}}
       {{ end -}}
     </div>
     {{ with .Resources.GetMatch "_cover*" -}}
     <div class="col" style="width: 50%;">
       <figure>
-        <img src="{{ .RelPermalink }}" />
+        <img src="{{ .RelPermalink }}" loading="lazy" decoding="async" alt="{{ $.Title }} cover" />
       </figure>
     </div>
     {{ end -}}

@@ -3,9 +3,12 @@
 {{ if .Params.subscriptions -}}
   {{ $titledivider = "<br/>" -}}
 {{ end -}}
-{{ range sort (where .Pages "Params.airDate" "<" (now.Format "2006-01-02T15:04:05-0700")) ".Params.airDate" "desc" -}}
+{{ range sort (where .Pages "Params.airDate" "<>" nil) ".Params.airDate" "desc" -}}
+    {{ $air := time .Params.airDate -}}
+    {{ if (le $air now) -}}
     <li>
-        <a target="{{ if .Params.publishURL }}_blank{{ end }}" href="{{ if .Params.publishURL }}{{ .Params.publishURL }}{{ else }}{{.RelPermalink}}{{ end }}">{{.Title}}</a> ({{.Params.airDate | time.Format ":date_full"}}){{ if .Params.subtitle }}{{ $titledivider | safeHTML }}<i>{{ .Params.subtitle }}</i>{{ end }}
+        <a target="{{ if .Params.publishURL }}_blank{{ end }}" rel="{{ if .Params.publishURL }}noopener noreferrer{{ end }}" href="{{ if .Params.publishURL }}{{ .Params.publishURL }}{{ else }}{{.RelPermalink}}{{ end }}">{{.Title}}</a> (<time datetime="{{ $air.Format "2006-01-02T15:04:05-07:00" }}">{{.Params.airDate | time.Format ":date_full"}}</time>){{ if .Params.subtitle }}{{ $titledivider | safeHTML }}<i>{{ .Params.subtitle }}</i>{{ end }}
     </li>
+    {{ end -}}
 {{ end -}}
 </ul>

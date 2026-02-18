@@ -8,7 +8,7 @@
 	</div>
 	{{ end }}
 	<div class="row">
-    {{ range .Pages }}
+    {{ range .Pages.ByWeight }}
     <div class="col portfolio-item">
 			<div class="portfolio-container"{{ with .Params.containerstyle }} style="{{ . | safeCSS }}"{{ end }}>
 				<h3{{ with .Params.h1size }} class="{{ . }}"{{ end }}><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
